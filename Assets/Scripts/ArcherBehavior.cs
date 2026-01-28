@@ -41,8 +41,7 @@ public class ArcherBehavior : MonoBehaviour
     // It is defined below if you want to understand how it works.
     // Hint: which of the state variables at the top of this file might you need for this function?
     private bool isInRange() {
-        // TODO: Implement this method
-        return false;
+        return calculateDistanceToPlayer() <= range;
     }
 
     // PART 2: We need to check if the archer's shooting cooldown is over
@@ -51,8 +50,7 @@ public class ArcherBehavior : MonoBehaviour
     // Hint: Use `Time.time` to get the current in-game time
     // Hint: You'll know the cooldown is over when the time since the last shot is greater than the cooldown
     private bool cooldownOver() {
-        // TODO: Implement this method
-        return false;
+        return Time.time - lastShotTime >= cooldown;
     }
 
     // PART 3: Finally, we need to put it all together and tell the archer how to behave on every frame
@@ -74,7 +72,15 @@ public class ArcherBehavior : MonoBehaviour
     // https://docs.unity3d.com/6000.3/Documentation/Manual/Coroutines.html
     void Update()
     {
-        // TODO: Implement this method
+      if (calculateDistanceToPlayer() <= range * 1.5) {
+        facePlayer();
+      }
+
+      if (isInRange() && cooldownOver()) {
+        animator.SetBool("IsShooting", true);
+        lastShotTime = Time.time;
+        StartCoroutine(ShootArrow());
+      }
     }
 
 
